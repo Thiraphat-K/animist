@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id       String @id @default(uuid()) @map("_id") @db.ObjectId
+  login    String @unique @db.String
+  password String @db.String
+}
+
+model studios {
+  id       String     @id @default(uuid()) @map("_id") @db.ObjectId
+  name     String     @unique @db.String
+  website  String     @db.String
+  chapters chapters[]
+  anime    anime[]
+}
+
+model chapters {
+  id       String   @id @default(uuid()) @map("_id") @db.ObjectId
+  name     String   @db.String
+  studio   studios? @relation(fields: [studioId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  studioId String?  @db.ObjectId
+  anime    anime    @relation(fields: [animeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  animeId  String   @db.ObjectId
+  duration Int      @db.Int
+
+  @@unique([name, animeId, duration])
+}
+
+model anime {
+  id       String     @id @default(uuid()) @map("_id") @db.ObjectId
+  name     String     @db.String @unique
+  year     Int        @db.Int
+  studio   studios?   @relation(fields: [studioId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  studioId String?    @db.ObjectId
+  chapters chapters[]
+}
