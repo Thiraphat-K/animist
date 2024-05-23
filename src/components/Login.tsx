@@ -16,6 +16,7 @@ import {
 } from "@/shared";
 import { PasswordInput } from "./PasswordInput";
 import userService from "@/services/userService";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   username: z.string().min(5, {
@@ -34,6 +35,21 @@ const Login: React.FC = () => {
       password: "",
     },
   });
+  const router = useRouter();
+
+  const onHandleSubmit = async (values: z.infer<typeof loginSchema>) => {
+    try {
+      const user = await userService.createUser({
+        login: values.username,
+        password: values.password,
+      });
+      if (user) router.push("/animelist");
+      return user;
+    } catch (err) {
+      console.log("Failed to fetch user", err);
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onHandleSubmit)} className="space-y-8">
@@ -79,25 +95,18 @@ const Login: React.FC = () => {
   );
 };
 
-function onHandleSubmit(values: z.infer<typeof loginSchema>) {
-  // useEffect(() => {
-  //   const fetchUser = async () => {
-  //     try {
-  //       const response = await userService.createUser({
-  //         login: values.username,
-  //         password: values.password,
-  //       });
-  //     } catch (err) {
-  //       console.log("Failed to fetch user", err);
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, []);
-  return await userService.createUser({
-    login: values.username,
-    password: values.password,
-  });
-}
+// function onHandleSubmit(values: z.infer<typeof loginSchema>) {
+//   const fetchUser = async () => {
+//     try {
+//       return await userService.createUser({
+//         login: values.username,
+//         password: values.password,
+//       });
+//     } catch (err) {
+//       console.log("Failed to fetch user", err);
+//     }
+//   };
+//   fetchUser();
+// }
 
 export default Login;

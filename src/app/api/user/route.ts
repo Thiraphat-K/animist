@@ -1,7 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { CreateUserDto } from "@/types/sharedDto";
-// import { CreateUserDto } from "@/types/sharedDTO";
-import { NextApiRequest } from "next";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
@@ -9,9 +7,16 @@ export const GET = async () => {
   return NextResponse.json(users);
 };
 
-const POST = async (request: NextApiRequest) => {
-  const { body } = request;
-  const createUser: CreateUserDto = body;
-  const user = await prisma.user.create({ data: { ...createUser } });
-  return NextResponse.json(user.login, { status: 201 });
+export const POST = async (request: Request) => {
+  const userCredential: CreateUserDto = (await request.json()) as any;
+  const existUser = await prisma.user.findUnique({
+    where: { login: userCredential.login },
+  });
+  if (existUser) {
+    return NextResponse.json(existUser.login);
+  }
+  const user = await prisma.user.create({
+    data: { ...userCredential },
+  });
+  return NextResponse.json(user);
 };

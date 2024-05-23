@@ -1,7 +1,7 @@
 export interface User {
   id?: string;
   login: string;
-  password: string;
+  password?: string;
 }
 
 export interface Studio {
