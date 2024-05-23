@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "tsx ./src/server/server.ts dev",
     "build": "next build",
-    "start": "npx db:reset && npx db:init && tsx ./src/server/server.ts",
+    "start-build": "npm run db:init && npm run db:reset && npm run build && tsx ./src/server/server.ts",
+    "start": "npm run dev",
     "lint": "next lint",
     "db:init": "npx prisma generate",
-    "db:reset": "npx prisma db push --force-reset"
+    "db:reset": "npx prisma db push"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
