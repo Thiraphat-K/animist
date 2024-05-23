@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsx ./src/server/server.ts dev",
     "build": "next build",
-    "start:init": "pnpm build && pnpm db:init-pnpm && pnpm db:reset-pnpm && tsx ./src/server/server.ts",
+    "start:init": "pnpm db:init && pnpm build && pnpm db:reset && tsx ./src/server/server.ts",
     "start": "pnpm build && tsx ./src/server/server.ts",
     "lint": "next lint",
     "db:init": "pnpx prisma generate",
