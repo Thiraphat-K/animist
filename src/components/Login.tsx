@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +17,7 @@ import {
 import { PasswordInput } from "./PasswordInput";
 import userService from "@/services/userService";
 import { useRouter } from "next/navigation";
+import { CircleArrowRightIcon, CircleUserRoundIcon } from "lucide-react";
 
 const loginSchema = z.object({
   username: z.string().min(5, {
@@ -52,7 +53,10 @@ const Login: React.FC = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onHandleSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onHandleSubmit)}
+        className="w-full flex flex-col gap-4 max-w-md"
+      >
         <FormField
           control={form.control}
           name="username"
@@ -65,6 +69,7 @@ const Login: React.FC = () => {
                   {...field}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   type="username"
+                  suffix={<CircleUserRoundIcon className="opacity-0" />}
                 />
               </FormControl>
               <FormMessage />
@@ -85,8 +90,9 @@ const Login: React.FC = () => {
           )}
         />
         <Button
-          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-white text-primary-foreground hover:bg-gray-200/90 h-10 px-4 py-2"
+          className="w-full"
           type="submit"
+          suffix={<CircleArrowRightIcon className="opacity-0" />}
         >
           Login
         </Button>
@@ -94,19 +100,5 @@ const Login: React.FC = () => {
     </Form>
   );
 };
-
-// function onHandleSubmit(values: z.infer<typeof loginSchema>) {
-//   const fetchUser = async () => {
-//     try {
-//       return await userService.createUser({
-//         login: values.username,
-//         password: values.password,
-//       });
-//     } catch (err) {
-//       console.log("Failed to fetch user", err);
-//     }
-//   };
-//   fetchUser();
-// }
 
 export default Login;
